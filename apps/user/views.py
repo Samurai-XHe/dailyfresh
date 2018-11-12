@@ -55,7 +55,7 @@ class RegisterView(View):
         # 发送验证邮件
         subject = '注册激活链接'
         message = ''
-        from_email = '847834358@qq.com'
+        from_email = settings.EMAIL_HOST_USER
         to_email = [email]
         html_message = "<h1>请点击以下链接完成注册</h1><a href='%s'>%s</a>" %(url, url)
         send_mail(subject, message, from_email, to_email, html_message=html_message)
