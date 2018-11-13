@@ -2,9 +2,10 @@ import re
 from django.shortcuts import render, redirect, reverse
 from django.views.generic import View
 from django.conf import settings
-from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from .models import User
+from celery_tasks.tasks import send_register_active_email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 
@@ -43,22 +44,17 @@ class RegisterView(View):
             return render(request, 'register.html', {'errmsg': '邮箱已存在'})
 
         # 进行业务处理
-        user = User.objects.create_user(username=username, email= email, password=password)
+        user = User.objects.create_user(username=username, email=email, password=password)
         user.is_active = 0
         user.save()
         serializer = Serializer(settings.SECRET_KEY, 3600)
         info = {'confirm': user.id}
         token = serializer.dumps(info)
         token = token.decode()
-        url = 'http://localhost:8000/user/active/%s' % token
+        token = 'http://localhost:8000/user/active/%s' % token
 
         # 发送验证邮件
-        subject = '注册激活链接'
-        message = ''
-        from_email = settings.EMAIL_HOST_USER
-        to_email = [email]
-        html_message = "<h1>请点击以下链接完成注册</h1><a href='%s'>%s</a>" %(url, url)
-        send_mail(subject, message, from_email, to_email, html_message=html_message)
+        send_register_active_email.delay(email, username, token)
         return redirect(reverse('goods:index'))
 
 
@@ -77,6 +73,38 @@ class ActiveView(View):
             return HttpResponse('激活链接已过期')
 
 
+# /user/login
 class LoginView(View):
     def get(self, request):
-        return render(request, 'login.html', {})
+        if 'username' in request.COOKIES:
+            username = request.COOKIES.get('username', '')
+            checked = 'checked'
+        else:
+            username = ''
+            checked = ''
+        return render(request, 'login.html', {
+            'username': username,
+            'checked': checked
+        })
+
+    def post(self, request):
+        username = request.POST.get('username', '')
+        password = request.POST.get('pwd', '')
+        if not all([username, password]):
+            return render(request, 'login.html', {'errmsg': '数据不完整'})
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                response = redirect(reverse('goods:index'))
+                remember = request.POST.get('remember', '')
+                if remember == 'on':
+                    response.set_cookie('username', username, max_age=7*24*3600)
+                else:
+                    response.delete_cookie('username')
+                return response
+            else:
+                return render(request, 'login.html', {'errmsg': '用户未激活'})
+        else:
+            return render(request, 'login.html', {'errmsg': '用户名或密码错误'})
+
