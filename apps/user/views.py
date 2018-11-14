@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from .models import User
+from utils.mixin import LoginRequiredMixin
 from celery_tasks.tasks import send_register_active_email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
@@ -58,7 +59,7 @@ class RegisterView(View):
         return redirect(reverse('goods:index'))
 
 
-# 激活用户
+# /user/active  激活用户
 class ActiveView(View):
     def get(self, request, token):
         serializer = Serializer(settings.SECRET_KEY, 3600)
@@ -73,7 +74,7 @@ class ActiveView(View):
             return HttpResponse('激活链接已过期')
 
 
-# /user/login
+# /user/login  登录页面
 class LoginView(View):
     def get(self, request):
         if 'username' in request.COOKIES:
@@ -96,7 +97,8 @@ class LoginView(View):
         if user:
             if user.is_active:
                 login(request, user)
-                response = redirect(reverse('goods:index'))
+                next_url = request.GET.get('next', reverse('goods:index'))
+                response = redirect(next_url)
                 remember = request.POST.get('remember', '')
                 if remember == 'on':
                     response.set_cookie('username', username, max_age=7*24*3600)
@@ -108,3 +110,27 @@ class LoginView(View):
         else:
             return render(request, 'login.html', {'errmsg': '用户名或密码错误'})
 
+
+# /user/logout  注销登陆页面
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect(reverse('goods:index'))
+
+
+# /user/user  用户中心-信息页
+class UserInfoView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'user_center_info.html', {'page': 'user'})
+
+
+# /user/order  用户中心-订单页
+class OrderView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'user_center_order.html', {'page': 'order'})
+
+
+# /user/address  用户中心-地址页
+class AddressView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'user_center_site.html', {'page': 'address'})

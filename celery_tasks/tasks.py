@@ -3,7 +3,7 @@ from django.conf import settings
 from celery import Celery
 
 
-app = Celery('celery_tasks.tasks', broker='redis://192.168.1.110:6379/8')
+app = Celery('celery_tasks.tasks', broker='redis://192.168.0.118:6379/8')
 
 
 @app.task
