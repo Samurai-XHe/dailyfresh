@@ -18,21 +18,21 @@
                         {% csrf_token %}
 						<div class="form_group">
 							<label>收件人：</label>
-							<input type="text" name="receiver">
+							<input type="text" name="receiver" value="{{ receiver }}">
 						</div>
 						<div class="form_group form_group2">
 							<label>详细地址：</label>
-							<textarea class="site_area" name="addr"></textarea>
+							<textarea class="site_area" name="addr">{{ addr }}</textarea>
 						</div>
 						<div class="form_group">
 							<label>邮编：</label>
-							<input type="text" name="zip_code">
+							<input type="text" name="zip_code" value="{{ zip_code }}">
 						</div>
 						<div class="form_group">
 							<label>手机：</label>
 							<input type="text" name="phone">
 						</div>
-
+                        <dd style="color:red">{{ errmsg }}</dd>
 						<input type="submit" value="提交" class="info_submit">
 					</form>
 				</div>

@@ -4,7 +4,9 @@ from django.views.generic import View
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
-from .models import User
+from .models import User, Address
+from goods.models import GoodsSKU
+from django_redis import get_redis_connection
 from utils.mixin import LoginRequiredMixin
 from celery_tasks.tasks import send_register_active_email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -48,11 +50,12 @@ class RegisterView(View):
         user = User.objects.create_user(username=username, email=email, password=password)
         user.is_active = 0
         user.save()
+        # 生成加密对象，第一个参数是加密类型，可以使用settings中的SECRET_KEY，第二个参数为过期时间，单位s
         serializer = Serializer(settings.SECRET_KEY, 3600)
-        info = {'confirm': user.id}
-        token = serializer.dumps(info)
-        token = token.decode()
-        token = 'http://localhost:8000/user/active/%s' % token
+        info = {'confirm': user.id}  # 加密的内容为用户id的字典
+        token = serializer.dumps(info)  # 加密
+        token = token.decode()  # 加密后的信息是二进制，所以要解码
+        token = 'http://localhost:8000/user/active/%s' % token  # 拼接成完整的验证链接
 
         # 发送验证邮件
         send_register_active_email.delay(email, username, token)
@@ -62,12 +65,13 @@ class RegisterView(View):
 # /user/active  激活用户
 class ActiveView(View):
     def get(self, request, token):
+        # 解析加密信息前也要实例化一个对象，参数要与之前一致
         serializer = Serializer(settings.SECRET_KEY, 3600)
         try:
-            info = serializer.loads(token)
-            user_id = info['confirm']
+            info = serializer.loads(token)  # 解密
+            user_id = info['confirm']  # 获取用户id
             user = User.objects.get(pk=user_id)
-            user.is_active = 1
+            user.is_active = 1  # 激活用户
             user.save()
             return redirect(reverse('user:login'))
         except SignatureExpired as e:
@@ -78,8 +82,8 @@ class ActiveView(View):
 class LoginView(View):
     def get(self, request):
         if 'username' in request.COOKIES:
-            username = request.COOKIES.get('username', '')
-            checked = 'checked'
+            username = request.COOKIES.get('username', '')  # 取出用户名
+            checked = 'checked'  # 在前端显示checked选中状态。
         else:
             username = ''
             checked = ''
@@ -100,10 +104,10 @@ class LoginView(View):
                 next_url = request.GET.get('next', reverse('goods:index'))
                 response = redirect(next_url)
                 remember = request.POST.get('remember', '')
-                if remember == 'on':
+                if remember == 'on':  # 判断是否记住用户名，如果是，在cookie中加入用户名信息
                     response.set_cookie('username', username, max_age=7*24*3600)
                 else:
-                    response.delete_cookie('username')
+                    response.delete_cookie('username')  # 如过否，删除cookie中的用户名信息
                 return response
             else:
                 return render(request, 'login.html', {'errmsg': '用户未激活'})
@@ -121,7 +125,22 @@ class LogoutView(View):
 # /user/user  用户中心-信息页
 class UserInfoView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'user_center_info.html', {'page': 'user'})
+        user = request.user
+        address = Address.objects.get_default_address(user=request.user)
+        # 从redis获取最近5条浏览记录
+        con = get_redis_connection('default')
+        history_key = 'history_%d' % user.id  # 利用用户id获取key值
+        sku_ids = con.lrange(history_key, 0, 4)  # 获取对应的5个商品id
+        goods_li = []
+        # 按顺序获取五条商品记录
+        for sku_id in sku_ids:
+            goods = GoodsSKU.objects.get(pk=sku_id)
+            goods_li.append(goods)
+        return render(request, 'user_center_info.html', {
+            'page': 'user',
+            'address': address,
+            'goods_li': goods_li
+        })
 
 
 # /user/order  用户中心-订单页
@@ -133,4 +152,39 @@ class OrderView(LoginRequiredMixin, View):
 # /user/address  用户中心-地址页
 class AddressView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'user_center_site.html', {'page': 'address'})
+        user = request.user
+        address = Address.objects.get_default_address(user=user)  # 获取默认地址信息
+        return render(request, 'user_center_site.html', {
+            'page': 'address',
+            'address': address
+        })
+
+    def post(self, request):
+        receiver = request.POST.get('receiver', '')
+        addr = request.POST.get('addr', '')
+        zip_code = request.POST.get('zip_code', '')
+        phone = request.POST.get('phone', '')
+        user = request.user
+        if not all([receiver, addr, phone]):
+            return render(request, 'user_center_site.html', {'errmsg': '数据不完整'})
+        if not re.match(r"^1[34578][0-9]{9}$", phone):
+            return render(request, 'user_center_site.html', {
+                'errmsg': '手机格式不正确',
+                'receiver': receiver,
+                'addr': addr,
+                'zip_code': zip_code,
+            })
+        address = Address.objects.get_default_address(user=user)
+        if address:
+            is_default = False
+        else:
+            is_default = True
+        Address.objects.create(
+            user = request.user,
+            receiver=receiver,
+            addr=addr,
+            zip_code=zip_code,
+            phone=phone,
+            is_default=is_default
+        )
+        return redirect(reverse('user:address'))
