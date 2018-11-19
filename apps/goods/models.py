@@ -7,7 +7,7 @@ from tinymce.models import HTMLField
 class GoodsType(BaseModel):
     name = models.CharField(max_length=20, verbose_name='种类名称')
     logo = models.CharField(max_length=20, verbose_name='标识')
-    image = models.ImageField(upload_to='type', verbose_name='商品类型图片')
+    image = models.ImageField(upload_to='type/%Y/%m', verbose_name='商品类型图片')
 
     class Meta:
         db_table = 'df_goods_type'
@@ -30,7 +30,7 @@ class GoodsSKU(BaseModel):
     desc = models.CharField(max_length=256, verbose_name='商品简介')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='商品价格')
     unite = models.CharField(max_length=20, verbose_name='商品单位')
-    image = models.ImageField(upload_to='goods', verbose_name='商品图片')
+    image = models.ImageField(upload_to='goods/%Y/%m', verbose_name='商品图片')
     stock = models.IntegerField(default=1, verbose_name='商品库存')
     sales = models.IntegerField(default=0, verbose_name='商品销量')
     status = models.SmallIntegerField(default=1, choices=status_choices, verbose_name='商品状态')
@@ -56,7 +56,7 @@ class Goods(BaseModel):
 # 商品图片模型类
 class GoodsImage(BaseModel):
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='goods', verbose_name='图片路径')
+    image = models.ImageField(upload_to='goods/%Y/%m', verbose_name='图片路径')
 
     class Meta:
         db_table = 'df_goods_image'
@@ -67,7 +67,7 @@ class GoodsImage(BaseModel):
 # 首页轮播商品展示模型类
 class IndexGoodsBanner(BaseModel):
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='banner', verbose_name='图片')
+    image = models.ImageField(upload_to='banner/%Y/%m', verbose_name='图片')
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序')
 
     class Meta:
@@ -85,7 +85,8 @@ class IndexTypeGoodsBanner(BaseModel):
 
     type = models.ForeignKey('GoodsType', verbose_name='商品类型', on_delete=models.CASCADE)
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品SKU', on_delete=models.CASCADE)
-    display_type = models.SmallIntegerField(default=1, choices=DISPLAY_TYPE_CHOICES, verbose_name='展示类型')
+    display_type = models.SmallIntegerField(
+        default=1, choices=DISPLAY_TYPE_CHOICES, verbose_name='展示类型')
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序')
 
     class Meta:
@@ -98,10 +99,13 @@ class IndexTypeGoodsBanner(BaseModel):
 class IndexPromotionBanner(BaseModel):
     name = models.CharField(max_length=20, verbose_name='活动名称')
     url = models.URLField(verbose_name='活动链接')
-    image = models.ImageField(upload_to='banner', verbose_name='活动图片')
+    image = models.ImageField(upload_to='banner/%Y/%m', verbose_name='活动图片')
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序')
 
     class Meta:
         db_table = 'df_index_promotion'
         verbose_name = "主页促销活动"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
