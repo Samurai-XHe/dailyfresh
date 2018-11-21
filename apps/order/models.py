@@ -38,6 +38,7 @@ class OrderInfo(BaseModel):
 # 订单商品模型类
 class OrderGoods(BaseModel):
     order = models.ForeignKey('OrderInfo', verbose_name='订单', on_delete=models.CASCADE)
+    # 外键没导入的话可以使用app名.模型名字符串的绑定形式
     sku = models.ForeignKey('goods.GoodsSKU', verbose_name='商品SKU', on_delete=models.CASCADE)
     count = models.IntegerField(default=1, verbose_name='商品数目')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='商品价格')

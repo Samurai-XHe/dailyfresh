@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.core.cache import cache
-from goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
+from goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner, GoodsSKU, Goods
 
 
 class BaseModelAdmin(admin.ModelAdmin):
@@ -37,8 +37,17 @@ class IndexTypeGoodsBannerAdmin(BaseModelAdmin):
 class IndexPromotionBannerAdmin(BaseModelAdmin):
     pass
 
+class GoodsSkuAdmin(BaseModelAdmin):
+    pass
+
+
+class GoodsAdmin(BaseModelAdmin):
+    pass
+
 
 admin.site.register(GoodsType, GoodsTypeAdmin)
 admin.site.register(IndexGoodsBanner, IndexGoodsBannerAdmin)
 admin.site.register(IndexTypeGoodsBanner, IndexTypeGoodsBannerAdmin)
 admin.site.register(IndexPromotionBanner, IndexPromotionBannerAdmin)
+admin.site.register(GoodsSKU, GoodsSkuAdmin)
+admin.site.register(Goods, GoodsAdmin)
