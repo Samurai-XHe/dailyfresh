@@ -13,8 +13,11 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
 
 
-# /user/register  注册页面
 class RegisterView(View):
+    """
+    /user/register
+    注册页面
+    """
     def get(self, request):
         return render(request, 'register.html', {})
 
@@ -62,8 +65,11 @@ class RegisterView(View):
         return redirect(reverse('goods:index'))
 
 
-# /user/active  激活用户
 class ActiveView(View):
+    """
+    /user/active
+    激活用户
+    """
     def get(self, request, token):
         # 解析加密信息前也要实例化一个对象，参数要与之前一致
         serializer = Serializer(settings.SECRET_KEY, 3600)
@@ -78,8 +84,11 @@ class ActiveView(View):
             return HttpResponse('激活链接已过期')
 
 
-# /user/login  登录页面
 class LoginView(View):
+    """
+    /user/login
+    登录页面
+    """
     def get(self, request):
         if 'username' in request.COOKIES:
             username = request.COOKIES.get('username', '')  # 取出用户名
@@ -115,15 +124,21 @@ class LoginView(View):
             return render(request, 'login.html', {'errmsg': '用户名或密码错误'})
 
 
-# /user/logout  注销登陆页面
 class LogoutView(View):
+    """
+    /user/logout
+    注销登陆页面
+    """
     def get(self, request):
         logout(request)
         return redirect(reverse('goods:index'))
 
 
-# /user/user  用户中心-信息页
 class UserInfoView(LoginRequiredMixin, View):
+    """
+    /user/user
+    用户中心-信息页
+    """
     def get(self, request):
         user = request.user
         address = Address.objects.get_default_address(user=request.user)
@@ -143,14 +158,20 @@ class UserInfoView(LoginRequiredMixin, View):
         })
 
 
-# /user/order  用户中心-订单页
 class OrderView(LoginRequiredMixin, View):
+    """
+    /user/order
+    用户中心-订单页
+    """
     def get(self, request):
         return render(request, 'user_center_order.html', {'page': 'order'})
 
 
-# /user/address  用户中心-地址页
 class AddressView(LoginRequiredMixin, View):
+    """
+    /user/address
+    用户中心-地址页
+    """
     def get(self, request):
         user = request.user
         address = Address.objects.get_default_address(user=user)  # 获取默认地址信息

@@ -2,8 +2,8 @@ from django.db import models
 from db.base_model import BaseModel
 
 
-# 订单模型类
 class OrderInfo(BaseModel):
+    """ 订单模型类 """
     PAY_METHOD_CHOICES = (
         (1, '货到付款'),
         (2, '微信支付'),
@@ -35,8 +35,8 @@ class OrderInfo(BaseModel):
         verbose_name_plural = verbose_name
 
 
-# 订单商品模型类
 class OrderGoods(BaseModel):
+    """ 订单商品模型类 """
     order = models.ForeignKey('OrderInfo', verbose_name='订单', on_delete=models.CASCADE)
     # 外键没导入的话可以使用app名.模型名字符串的绑定形式
     sku = models.ForeignKey('goods.GoodsSKU', verbose_name='商品SKU', on_delete=models.CASCADE)
