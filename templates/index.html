@@ -67,9 +67,9 @@
 			<ul class="goods_list fl">
                 {% for banner in type.image_banners %}
                     <li>
-					<h4><a href="{% url 'goods:detail' banner.sku.id %}">{{ banner.name }}</a></h4>
+					<h4><a href="{% url 'goods:detail' banner.sku.id %}">{{ banner.sku.name }}</a></h4>
 					<a href="{% url 'goods:detail' banner.sku.id %}"><img src="{{ MEDIA_URL }}{{ banner.sku.image }}"></a>
-					<div class="prize">¥ 30.00</div>
+					<div class="prize">¥ {{ banner.sku.price }}</div>
 				</li>
                 {% endfor %}
 			</ul>
