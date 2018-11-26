@@ -182,7 +182,7 @@
                             });
                     }else if (data.res == 0){
                         console.log(data.res);
-                        window.location.href = "{% url 'user:login' %}?next={% url 'goods:detail' sku.id%}"
+                        window.location.href = "{% url 'user:login' %}?next={% url 'goods:detail' sku.id            %}"
                     }
                     else {
                         // 添加失败
