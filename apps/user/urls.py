@@ -9,6 +9,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),  # 登录
     path('logout/', LogoutView.as_view(), name='logout'),  # 注销登录
     path('user/', UserInfoView.as_view(), name='user'),  # 用户中心-信息页
-    path('order/', OrderView.as_view(), name='order'),  # 用户中心-订单也
+    path('order/<int:page>/', OrderView.as_view(), name='order'),  # 用户中心-订单也
     path('address/', AddressView.as_view(), name='address'),  # 用户中心-地址页
 ]
