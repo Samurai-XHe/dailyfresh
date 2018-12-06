@@ -1,15 +1,14 @@
+# 在任务处理者一端加这几句
+import django
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dailyfresh.settings")
+django.setup()
+
 from django.core.mail import send_mail
 from django.conf import settings
+from celery import Celery
 from django.template import loader
 from goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
-from celery import Celery
-
-
-# 在任务处理者一端加这几句
-# import django
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dailyfresh.settings")
-# django.setup()
 
 app = Celery('celery_tasks.tasks', broker='redis://192.168.204.129:6379/8')
 
