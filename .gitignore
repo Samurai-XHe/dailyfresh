@@ -10,6 +10,11 @@ db.sqlite3
 base_settings.py
 __pycache__/
 .idea/
+uwsgi.pid
+uwsgi.log
+uwsgi2.log
+uwsgi2.pid
+whoosh_index/
 
 # Distribution / packaging
 .Python

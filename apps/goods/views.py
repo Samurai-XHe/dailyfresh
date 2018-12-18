@@ -27,7 +27,6 @@ class IndexView(View):
                     type=tp, display_type=0).order_by('index')
                 tp.image_banners = image_banners
                 tp.title_banners = title_banners
-
             context = {
                 'types': types,
                 'goods_banners': goods_banners,
@@ -35,15 +34,15 @@ class IndexView(View):
             }
             cache.set('index_page_data', context, 3600)  # 设置缓存数据（键，值，过期时间）
 
-        # 获取用户购物车中的商品的数目
-        user = request.user
-        cart_count = 0
-        if user.is_authenticated:
-            conn = get_redis_connection('default')
-            cart_key = 'cart_%d' % user.id
-            cart_count = conn.hlen(cart_key)
+        # # 获取用户购物车中的商品的数目
+        # user = request.user
+        # cart_count = 0
+        # if user.is_authenticated:
+        #     conn = get_redis_connection('default')
+        #     cart_key = 'cart_%d' % user.id
+        #     cart_count = conn.hlen(cart_key)
 
-        context.update(cart_count=cart_count)  # 加入上下文中
+        # context.update(cart_count=cart_count)  # 加入上下文中
         return render(request, 'index.html', context)
 
 
@@ -59,20 +58,20 @@ class DetailView(View):
             # 商品不存在
             return redirect(reverse('goods:index'))
         # 获取全部分类
-        types = GoodsType.objects.all()
+        # types = GoodsType.objects.all()
         # 获取商品的评论信息
         sku_orders = OrderGoods.objects.filter(sku=sku).exclude(comment='')
         # 获取新品信息
         new_skus = GoodsSKU.objects.filter(type=sku.type).order_by('-create_time')[:2]
         # 获取同一个spu的其他规格商品
         same_spu_skus = GoodsSKU.objects.filter(goods=sku.goods).exclude(pk=goods_id)
-        # 获取用户购物车中的商品数目
+        # # 获取用户购物车中的商品数目
         user = request.user
-        cart_count = 0
+        # cart_count = 0
         if user.is_authenticated:
             conn = get_redis_connection('default')
-            cart_key = 'cart_%d' % user.id
-            cart_count = conn.hlen(cart_key)
+            # cart_key = 'cart_%d' % user.id
+            # cart_count = conn.hlen(cart_key)
 
             # 添加用户的浏览记录
             # conn = get_redis_connection('default')
@@ -82,11 +81,9 @@ class DetailView(View):
             conn.ltrim(history_key, 0, 4)
         # 组织上下文
         context = {'sku': sku,
-                   'types': types,
                     'sku_orders': sku_orders,
                     'new_skus': new_skus,
                     'same_spu_skus': same_spu_skus,
-                    'cart_count': cart_count
         }
         return render(request, 'detail.html', context)
 
@@ -101,7 +98,7 @@ class ListView(View):
             type = GoodsType.objects.get(pk=type_id)
         except GoodsType.DoesNotExist:
             return redirect(reverse('goods:index'))
-        types = GoodsType.objects.all()
+        # types = GoodsType.objects.all()
         sort = request.GET.get('sort', '')
         if sort == 'price':
             skus = GoodsSKU.objects.filter(type=type).order_by('price')
@@ -140,18 +137,16 @@ class ListView(View):
         new_skus = GoodsSKU.objects.filter(type=type).order_by('-create_time')[:2]
 
         # 获取用户购物车中商品的数目
-        user = request.user
-        cart_count = 0
-        if user.is_authenticated:
-            conn = get_redis_connection('default')
-            cart_key = 'cart_%d' % user.id
-            cart_count = conn.hlen(cart_key)
+        # user = request.user
+        # cart_count = 0
+        # if user.is_authenticated:
+        #     conn = get_redis_connection('default')
+        #     cart_key = 'cart_%d' % user.id
+        #     cart_count = conn.hlen(cart_key)
 
         context = {'type': type,
-                   'types': types,
                    'skus_page': skus_page,
                    'new_skus': new_skus,
-                   'cart_count': cart_count,
                    'pages': pages,
                    'sort': sort
         }

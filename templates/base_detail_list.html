@@ -2,24 +2,19 @@
 {% extends 'base.html' %}
 {# 网站主体内容块 #}
 {% block body %}
+{% load goods_tags %}
 	<div class="navbar_con">
 		<div class="navbar clearfix">
 			<div class="subnav_con fl">
 				<h1>全部商品分类</h1>
 				<span></span>
 				<ul class="subnav">
-					{% for type in types %}
+					{% get_goods_type as type_list %}
+					{% for type in type_list %}
                         <li><a href="{% url 'goods:list' type.id 1 %}?sort=default" class="{{ type.logo }}">{{ type.name }}</a></li>
                     {% endfor %}
 				</ul>
 			</div>
-			<ul class="navlist fl">
-				<li><a href="{% url 'goods:index' %}">首页</a></li>
-				<li class="interval">|</li>
-				<li><a href="">手机生鲜</a></li>
-				<li class="interval">|</li>
-				<li><a href="">抽奖</a></li>
-			</ul>
 		</div>
 	</div>
     {# 详情页，列表页主体内容块 #}
