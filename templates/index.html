@@ -19,7 +19,6 @@
 
 	<div class="center_con clearfix">
 		<ul class="subnav fl">
-			{% get_goods_type as type_list %}
             {% for type in types %}
                 <li>
                     <a href="#model0{{ forloop.counter }}" class="{{ type.logo }}">

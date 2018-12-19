@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     
@@ -22,14 +23,17 @@
 		<div class="header">
 			<div class="welcome fl">欢迎来到天天生鲜!</div>
 			<div class="fr">
-				<div class="login_btn fl">
-					
-				<div class="login_btn fl">
+				<!-- <div class="login_btn fl">
 					<a href="/user/login/">登录</a>
 					<span>|</span>
 					<a href="/user/register/">注册</a>
-				</div>
-                
+				</div> -->
+				<div class="user_link fl">
+					<a href="/user/user/">用户中心</a>
+					<span>|</span>
+					<a href="/cart/">我的购物车</a>
+					<span>|</span>
+					<a href="/user/order/1/">我的订单</a>
 				</div>
 			</div>
 		</div>		
@@ -39,14 +43,15 @@
 
 
 	<div class="search_bar clearfix">
-		<a href="index.html" class="logo fl"><img src="/static/images/logo.png"></a>
+		<a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
 		<div class="search_con fl">
-			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
-			<input type="button" class="input_btn fr" name="" value="搜索">
-		</div>
+			<form action="/search" method="get">
+                <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
+                <input type="submit" class="input_btn fr" name="" value="搜索">
+            </form>
+		</div>	
 		<div class="guest_cart fr">
-			<a href="#" class="cart_name fl">我的购物车</a>
-			<div class="goods_count fl" id="show_count"></div>
+			<a href="/cart/" class="cart_name fl">我的购物车</a>
 		</div>
 	</div>
 
@@ -56,13 +61,6 @@
 	<div class="navbar_con">
 		<div class="navbar">
 			<h1 class="fl">全部商品分类</h1>
-			<ul class="navlist fl">
-				<li><a href="">首页</a></li>
-				<li class="interval">|</li>
-				<li><a href="">手机生鲜</a></li>
-				<li class="interval">|</li>
-				<li><a href="">抽奖</a></li>
-			</ul>
 		</div>
 	</div>
 
@@ -85,11 +83,11 @@
 		<div class="slide fl">
 			<ul class="slide_pics">
                 
-				    <li><a href="#"><img src="/media/banner/2018/11/slide04.jpg" alt="幻灯片"></a></li>
+				    <li><a href="/goods/2/"><img src="media/banner/2018/11/slide04.jpg" alt="周杰伦的秋刀鱼"></a></li>
                 
-				    <li><a href="#"><img src="/media/banner/2018/11/slide02.jpg" alt="幻灯片"></a></li>
+				    <li><a href="/goods/1/"><img src="media/banner/2018/11/slide02.jpg" alt="高级柠檬"></a></li>
                 
-				    <li><a href="#"><img src="/media/banner/2018/11/slide.jpg" alt="幻灯片"></a></li>
+				    <li><a href="/goods/3/"><img src="media/banner/2018/11/slide.jpg" alt="玫瑰草莓500g"></a></li>
                 
 			</ul>
 			<div class="prev"></div>
@@ -98,130 +96,130 @@
 		</div>
 		<div class="adv fl">
             
-			    <a href="http://xhe.pythonanywhere.com"><img src="/media/banner/2018/11/adv01.jpg"></a>
+			    <a href="http://xhe.pythonanywhere.com"><img src="media/banner/2018/11/adv01.jpg"></a>
             
-			    <a href="http://www.github.com"><img src="/media/banner/2018/11/adv02_nzoDeHF.jpg"></a>
+			    <a href="http://www.github.com"><img src="media/banner/2018/11/adv02_nzoDeHF.jpg"></a>
             
 		</div>
 	</div>
 
     
-	<div class="list_model">
+		<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model01">新鲜水果</h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 
-				    <a href="#">高级柠檬</a>
-				
+                    <a href="/goods/1/">高级柠檬</a>
+                
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/1/1/?sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/media/type/2018/11/banner01.jpg"></div>
+			<div class="goods_banner fl"><img src="media/type/2018/11/banner01.jpg"></div>
 			<ul class="goods_list fl">
                 
-				<li>
-					<h4><a href="#">玫瑰草莓500g</a></h4>
-					<a href="#"><img src="/media/goods/2018/11/goods003.jpg"></a>
+                    <li>
+					<h4><a href="/goods/3/">玫瑰草莓500g</a></h4>
+					<a href="/goods/3/"><img src="media/goods/2018/11/goods003.jpg"></a>
 					<div class="prize">¥ 20.00</div>
 				</li>
-				
+                
 			</ul>
 		</div>
 	</div>
     
-	<div class="list_model">
+		<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model02">海鲜水产</h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/2/1/?sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/media/type/2018/11/banner02.jpg"></div>
+			<div class="goods_banner fl"><img src="media/type/2018/11/banner02.jpg"></div>
 			<ul class="goods_list fl">
                 
-				<li>
-					<h4><a href="#">周杰伦的秋刀鱼</a></h4>
-					<a href="#"><img src="/media/goods/2018/11/goods020.jpg"></a>
+                    <li>
+					<h4><a href="/goods/2/">周杰伦的秋刀鱼</a></h4>
+					<a href="/goods/2/"><img src="media/goods/2018/11/goods020.jpg"></a>
 					<div class="prize">¥ 10.00</div>
 				</li>
-				
+                
 			</ul>
 		</div>
 	</div>
     
-	<div class="list_model">
+		<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model03">猪牛羊肉</h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/3/1/?sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/media/type/2018/11/banner03.jpg"></div>
+			<div class="goods_banner fl"><img src="media/type/2018/11/banner03.jpg"></div>
 			<ul class="goods_list fl">
                 
 			</ul>
 		</div>
 	</div>
     
-	<div class="list_model">
+		<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model04">禽类蛋品</h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/4/1/?sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/media/type/2018/11/banner04.jpg"></div>
+			<div class="goods_banner fl"><img src="media/type/2018/11/banner04.jpg"></div>
 			<ul class="goods_list fl">
                 
 			</ul>
 		</div>
 	</div>
     
-	<div class="list_model">
+		<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model05">新鲜蔬菜</h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/5/1/?sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/media/type/2018/11/banner05.jpg"></div>
+			<div class="goods_banner fl"><img src="media/type/2018/11/banner05.jpg"></div>
 			<ul class="goods_list fl">
                 
 			</ul>
 		</div>
 	</div>
     
-	<div class="list_model">
+		<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model06">速冻食品</h3>
 			<div class="subtitle fl">
 				<span>|</span>
                 
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/6/1/?sort=default" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="/media/type/2018/11/banner06.jpg"></div>
+			<div class="goods_banner fl"><img src="media/type/2018/11/banner06.jpg"></div>
 			<ul class="goods_list fl">
                 
 			</ul>
