@@ -27,5 +27,5 @@ urlpatterns = [
     path('', include('goods.urls')),  # 商品模块
     path('search/', include('haystack.urls')),  # 全文检索
     re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),  # 上传文件访问url
-    # re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),  # 静态文件访问url
+    re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),  # 静态文件访问url
 ]

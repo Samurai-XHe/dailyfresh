@@ -122,9 +122,9 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'static')
-# ]
+#STATICFILES_DIRS = [
+#   os.path.join(BASE_DIR, 'static')
+#]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -140,7 +140,7 @@ TINYMCE_DEFAULT_CONFIG = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://192.168.204.129:6379/9",
+        "LOCATION": "redis://:test123456@192.168.204.129:6379/9",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

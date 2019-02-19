@@ -10,7 +10,7 @@ from celery import Celery
 from django.template import loader
 from goods.models import GoodsType, IndexGoodsBanner, IndexPromotionBanner, IndexTypeGoodsBanner
 
-app = Celery('celery_tasks.tasks', broker='redis://192.168.204.129:6379/8')
+app = Celery('celery_tasks.tasks', broker='redis://:test123456@192.168.204.129:6379/8')
 
 
 @app.task
