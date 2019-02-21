@@ -640,3 +640,18 @@ html,body{height:100%}
 .stress{
 	color:#ff8800;
 }
+
+p.login_error {
+	color: red;
+}
+
+.cart_submit {
+	cursor: pointer;
+	height:100%;
+	width: 100%;
+	background-color:#ff3d3d;
+	text-align:center;
+	color:#fff;
+	border: 0;
+	font: normal 20px/78px '微软雅黑';
+}

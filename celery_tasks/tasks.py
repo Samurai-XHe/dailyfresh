@@ -16,7 +16,7 @@ app = Celery('celery_tasks.tasks', broker='redis://:test123456@192.168.204.129:6
 @app.task
 def send_register_active_email(to_email, username, token):
     subject = '天天生鲜欢迎信息'
-    message = ''
+    message = 'lalala'
     sender = settings.EMAIL_HOST_USER
     receiver = [to_email]
     html_message = "<h1>%s,欢迎您请点击以下链接完成注册</h1><a href='%s'>%s</a>" % (username, token, token)

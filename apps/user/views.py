@@ -7,7 +7,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 
-
 from .models import User, Address
 from order.models import OrderInfo, OrderGoods
 from goods.models import GoodsSKU
@@ -146,7 +145,7 @@ class UserInfoView(LoginRequiredMixin, View):
     """
     def get(self, request):
         user = request.user
-        address = Address.objects.get_default_address(user=request.user)
+        address = Address.objects.get_default_address(user=user)
         # 从redis获取最近5条浏览记录
         con = get_redis_connection('default')
         history_key = 'history_%d' % user.id  # 利用用户id获取key值

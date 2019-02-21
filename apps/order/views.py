@@ -277,7 +277,6 @@ class CheckPayView(View):
             )
         except OrderInfo.DoesNotExist:
             return JsonResponse({'res': 2, 'errmsg': '订单错误'})
-
         # 业务处理:使用python sdk调用支付宝的支付接口
         # 初始化
         alipay = AliPay(

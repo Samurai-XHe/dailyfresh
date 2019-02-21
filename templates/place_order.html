@@ -13,7 +13,7 @@
                 {{ addr.addr }} （{{ addr.receiver }} 收） {{ addr.phone}}</dd>
             {% endfor %}
 		</dl>
-		<a href="user_center_site.html" class="edit_site">编辑收货地址</a>
+		<a href="{% url 'user:address' %}" class="edit_site">编辑收货地址</a>
 
 	</div>
 	
@@ -25,7 +25,7 @@
 			<input type="radio" name="pay_style" value="2">
 			<label class="weixin">微信支付</label>
 			<input type="radio" name="pay_style" value="3">
-			<label class="zhifubao"></label>
+			<label class="zhifubao">支付宝</label>
 			<input type="radio" name="pay_style" value="4">
 			<label class="bank">银行卡支付</label>
 		</div>
